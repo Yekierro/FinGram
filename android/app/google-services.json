@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "648636581940",
+    "project_id": "fingram-29a43",
+    "storage_bucket": "fingram-29a43.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:648636581940:android:bb18e1b820799c96c26261",
+        "android_client_info": {
+          "package_name": "com.example.fingram"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAsXE81BQFyXjYUM8E4EXvU0zaA98RNjKo"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
