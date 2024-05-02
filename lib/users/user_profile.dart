@@ -1,6 +1,7 @@
 import 'package:fingram/button/rounded_button.dart';
 import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 
@@ -125,6 +126,10 @@ class _UserProfilePageState extends State<UserProfilePage> {
             TextField(
               controller: _nameController,
               decoration: const InputDecoration(labelText: 'Имя'),
+              inputFormatters: [
+                LengthLimitingTextInputFormatter(20),
+                FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Zа-яА-Я ]')),
+              ],
             ),
             ElevatedButton(
               onPressed: () => _updateInformation('name', _nameController.text),
@@ -134,6 +139,11 @@ class _UserProfilePageState extends State<UserProfilePage> {
               controller: _ageController,
               decoration: const InputDecoration(labelText: 'Возраст'),
               keyboardType: TextInputType.number,
+              inputFormatters: [
+                FilteringTextInputFormatter.digitsOnly,
+                FilteringTextInputFormatter.allow(
+                    RegExp(r'^[1-9][0-9]?$|^100$')),
+              ],
             ),
             ElevatedButton(
               onPressed: () => _updateInformation('age', _ageController.text),
@@ -157,7 +167,7 @@ class _UserProfilePageState extends State<UserProfilePage> {
             RoundedButton(
                 colour: Colors.red,
                 title: 'Выйти из аккаунта',
-                onPressed: _signOut)
+                onPressed: _signOut),
           ],
         ),
       ),
