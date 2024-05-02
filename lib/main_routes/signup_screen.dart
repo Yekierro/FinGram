@@ -65,7 +65,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 decoration:
                     kTextFieldDecoration.copyWith(hintText: 'Введите пароль'),
               ),
-              const SizedBox(height: 8.0),
               TextField(
                 controller: _nameController,
                 textAlign: TextAlign.center,
@@ -73,6 +72,7 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                     kTextFieldDecoration.copyWith(hintText: 'Введите имя'),
                 inputFormatters: [
                   LengthLimitingTextInputFormatter(20),
+                  FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Zа-яА-Я ]')),
                 ],
               ),
               const SizedBox(height: 8.0),
