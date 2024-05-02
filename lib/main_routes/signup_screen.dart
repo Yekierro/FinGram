@@ -1,8 +1,9 @@
-import 'package:fingram/button/rounded_button.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:modal_progress_hud_nsn/modal_progress_hud_nsn.dart';
+import 'package:fingram/button/rounded_button.dart';
 
 const kTextFieldDecoration = InputDecoration(
   hintText: 'Enter a value',
@@ -35,30 +36,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _ageController = TextEditingController();
   bool showSpinner = false;
-
-  Future<void> initializeProgressForNewUser(String userId) async {
-    DatabaseReference lessonsRef = FirebaseDatabase.instance.ref('lessons');
-    DatabaseReference userProgressRef =
-        FirebaseDatabase.instance.ref('users/$userId/progress');
-
-    DatabaseEvent lessonsEvent = await lessonsRef.once();
-    if (lessonsEvent.snapshot.exists) {
-      Map<dynamic, dynamic> lessonsMap =
-          lessonsEvent.snapshot.value as Map<dynamic, dynamic>;
-      for (var lessonId in lessonsMap.keys) {
-        userProgressRef.child(lessonId).set({'isCompleted': false});
-      }
-    }
-  }
-
-  @override
-  void dispose() {
-    _emailController.dispose();
-    _passwordController.dispose();
-    _nameController.dispose();
-    _ageController.dispose();
-    super.dispose();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -94,6 +71,9 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 textAlign: TextAlign.center,
                 decoration:
                     kTextFieldDecoration.copyWith(hintText: 'Введите имя'),
+                inputFormatters: [
+                  LengthLimitingTextInputFormatter(20),
+                ],
               ),
               const SizedBox(height: 8.0),
               TextField(
@@ -102,6 +82,11 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                 textAlign: TextAlign.center,
                 decoration:
                     kTextFieldDecoration.copyWith(hintText: 'Введите возраст'),
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                  FilteringTextInputFormatter.allow(
+                      RegExp(r'^[1-9][0-9]?$|^100$')),
+                ],
               ),
               const SizedBox(height: 24.0),
               RoundedButton(
@@ -124,8 +109,6 @@ class _RegistrationScreenState extends State<RegistrationScreen> {
                         'name': _nameController.text,
                         'age': _ageController.text,
                       });
-                      await initializeProgressForNewUser(
-                          userCredential.user!.uid);
                       Navigator.pushNamed(context, 'helper');
                     }
                   } catch (e) {
